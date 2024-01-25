@@ -955,9 +955,7 @@
             <mat-form-field color="accent" appearance="outline">
               <mat-label>Expense</mat-label>
               <mat-select formControlName="expenseType">
-                <mat-option value="HCP">Expense 1</mat-option>
-                <mat-option value="foodAndBeverages">Food And Beverages</mat-option>
-                <mat-option value="other">Other</mat-option>
+                <mat-option *ngFor="let exp of expenseType" value={{exp.ExpenseType}}>{{exp.ExpenseType}}</mat-option>
               </mat-select>
             </mat-form-field>
 

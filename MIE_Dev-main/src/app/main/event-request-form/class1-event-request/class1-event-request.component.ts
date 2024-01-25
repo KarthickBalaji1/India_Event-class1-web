@@ -37,6 +37,7 @@ export class Class1EventRequestComponent implements OnInit {
   eventDetails : any;
   hcpRoles : any
   vendorDetails : any;
+  expenseType : any
   
  
 
@@ -151,6 +152,11 @@ export class Class1EventRequestComponent implements OnInit {
       res => {
         if(Boolean(res)) this.slideKitDetails = res;
       }
+    )
+
+    // Get Expense Types
+    utilityService.getExpenseType().subscribe(
+      res => this.expenseType = res
     )
     
     this.eventInitiation1 = new FormGroup({
