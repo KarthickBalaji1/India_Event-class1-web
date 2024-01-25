@@ -96,6 +96,7 @@ export const MenariniApiUrl = {
        //get expense data for post event settlement
        getPostEventExpense : Url + '/GetRequestSheets/GetExpenseData',
 
-       getPanelSelectionFinalAmount : Url + ''
+      // event request process sheet for status purpose in event list
+      getEventList : Url + "/GetRequestSheets/GetEventRequestProcessData"
 }
 

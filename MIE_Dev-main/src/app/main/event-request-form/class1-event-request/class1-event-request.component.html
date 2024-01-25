@@ -31,7 +31,7 @@
         <div class="row">
           <div class="col" *ngIf="show30DaysUploaDeviation" >
             <div class="p-2 m-1" >
-              <mat-label>Upload Deviation</mat-label><br>
+              <mat-label>Upload Deviation <span style="color: red;">*</span></mat-label><br>
               <input type="file" (change)="onFileSelected($event)" formControlName="withIn30DaysDeviation">
             </div>
           </div>
@@ -48,7 +48,7 @@
           </div>
           <div class="col">
             <div class="p-2 m-1" *ngIf="show7DaysUploadDeviation" >
-              <mat-label>Upload Deviation</mat-label><br>
+              <mat-label>Upload Deviation <span style="color: red;">*</span></mat-label><br>
               <input type="file" (change)="onFileSelected($event)" formControlName="next7DaysDeviation">
             </div>
           </div>
@@ -66,7 +66,7 @@
       <div class="row">
         <div class="col">
           <mat-form-field color="accent" appearance="outline">
-            <mat-label>Event Type</mat-label>
+            <mat-label>Event Type<span style="color: red;">*</span></mat-label>
             <mat-select disabled [value]="eventType" >
               <mat-option *ngFor="let event of eventDetails"
                 value={{event.EventTypeId}}>{{event.EventType}}</mat-option>
@@ -79,7 +79,7 @@
           </mat-form-field>
 
           <mat-form-field color="accent" appearance="outline">
-            <mat-label>Event Date</mat-label>
+            <mat-label>Event Date<span style="color: red;">*</span></mat-label>
             <input matInput  disabled [value]="eventDate">
           </mat-form-field>
 
@@ -90,7 +90,7 @@
             </mat-form-field>
 
             <mat-form-field class="col-lg-6 col-md-6 col-sm-6" color="accent" appearance="outline">
-              <mat-label>End Time</mat-label>
+              <mat-label>End Time<span style="color: red;">*</span></mat-label>
               <input matInput type="time" formControlName="endTime">
               <mat-error>End Time Should be greater than start time</mat-error>
             </mat-form-field>
@@ -140,19 +140,19 @@
           </mat-form-field>
 
           <mat-form-field color="accent" appearance="outline">
-            <mat-label>% Allocation</mat-label>
+            <mat-label>% Allocation<span style="color: red;">*</span></mat-label>
             <input matInput placeholder="% of Allocation auto populated" disabled [value]="percentageAllocation">
           </mat-form-field>
         </div>
 
         <div class="col">
           <mat-form-field color="accent" appearance="outline">
-            <mat-label>Project-ID</mat-label>
+            <mat-label>Project-ID<span style="color: red;">*</span></mat-label>
             <input matInput placeholder="Project Id auto populated" disabled [value]="projectId">
           </mat-form-field>
 
           <mat-form-field color="accent" appearance="outline">
-            <mat-label>EventCode</mat-label>
+            <mat-label>EventCode<span style="color: red;">*</span></mat-label>
             <input matInput placeholder="EventCode auto populated" disabled [value]="eventCode">
           </mat-form-field>
 
@@ -379,9 +379,26 @@
 
           <form [formGroup]="eventInitiation4Sub">
             <div class="row">
-                <div class="col">
+              <div class="col">
+                <mat-form-field *ngIf="showRationale" color="accent" appearance="outline">
+                  <mat-label>Rationale</mat-label>
+                  <input matInput type="number" placeholder="Enter Currency" formControlName="rationale">
+                </mat-form-field>
+              </div>
+              
+              <div class="col">
+                <div class="m-3" *ngIf="showRationale">
+                  <mat-label>Upload NOC</mat-label><br>
+                  <input type="file" formControlName="uploadNOC">
+                </div>
+              </div>
+             
+            </div>
 
-                    <mat-label><b>Upload FCPA</b></mat-label><br>
+            
+            <div class="row">
+                <div class="col">
+                    <mat-label><b>Upload FCPA<span style="color: red;">*</span></b></mat-label><br>
                     <div class="m-2">
                         <input type="file" formControlName="uploadFCPA">
                     </div>
@@ -430,19 +447,19 @@
                         <div class="row">
                           <div class="col">
                             <mat-form-field color="accent" appearance="outline">
-                              <mat-label>Presentation / Speaking / Workshop duration</mat-label>
+                              <mat-label>Presentation / Speaking / Workshop duration(minutes)</mat-label>
                               <input matInput type="number" placeholder="Enter Duration in minutes"
                                 formControlName="presentationDuration">
                             </mat-form-field>
                   
                             <mat-form-field color="accent" appearance="outline">
-                              <mat-label>Development presentation /Panel session preparation</mat-label>
+                              <mat-label>Development presentation /Panel session preparation(minutes)</mat-label>
                               <input matInput type="number" placeholder="Enter Duration in minutes"
                                 formControlName="panelSessionPreparation">
                             </mat-form-field>
                   
                             <mat-form-field color="accent" appearance="outline">
-                              <mat-label>Q&A Session</mat-label>
+                              <mat-label>Q&A Session(minutes)</mat-label>
                               <input matInput type="number" [max]="15" placeholder="Enter Duration in minutes"
                                 formControlName="qaSession">
                               <mat-hint>(Max 15 minutes)</mat-hint>
@@ -456,14 +473,14 @@
                           </div>
                           <div class="col">
                             <mat-form-field color="accent" appearance="outline">
-                              <mat-label>Speaker/Trainer Briefing</mat-label>
+                              <mat-label>Speaker/Trainer Briefing(minutes)</mat-label>
                               <input matInput type="number" [max]="120" placeholder="Enter Duration in minutes"
                                 formControlName="briefingDuration">
                               <mat-hint>(Max 120 minutes)</mat-hint>
                             </mat-form-field>
                   
                             <mat-form-field color="accent" appearance="outline">
-                              <mat-label>Panel Discussion/session duration</mat-label>
+                              <mat-label>Panel Discussion/session duration(minutes)</mat-label>
                               <input matInput type="number" placeholder="Panel Discussion/session duration" formControlName="panelDiscussionDuration">
                             </mat-form-field>
                   
@@ -477,10 +494,7 @@
                         <div class="row">
                           <div class="col">
                       
-                            <div class="m-3" *ngIf="showRationale">
-                              <mat-label>Upload NOC</mat-label><br>
-                              <input type="file" formControlName="uploadNOC">
-                            </div>
+                            
                   
                             <mat-form-field color="accent" appearance="outline">
                               <mat-label>Currency</mat-label>
@@ -531,10 +545,7 @@
                           
                           </div>
                           <div class="col">
-                            <mat-form-field *ngIf="showRationale" color="accent" appearance="outline">
-                              <mat-label>Rationale</mat-label>
-                              <input matInput type="number" placeholder="Enter Currency" formControlName="rationale">
-                            </mat-form-field>
+                            
             
                             <mat-form-field color="accent" appearance="outline">
                               <mat-label>Name as per PAN</mat-label>

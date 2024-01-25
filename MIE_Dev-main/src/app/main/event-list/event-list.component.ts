@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UtilityService } from 'src/app/shared/services/event-utility/utility-service.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { UtilityService } from 'src/app/shared/services/event-utility/utility-se
 })
 export class EventListComponent implements OnInit {
 
-  constructor(private utilityService: UtilityService, private http:HttpClient) { }
+  constructor(private utilityService: UtilityService, private http:HttpClient,private router : Router) { }
 
   eventList : any;
 
@@ -26,18 +27,32 @@ export class EventListComponent implements OnInit {
   //     console.log(this.eventList);
   //   })
 
-    this.utilityService.getPrevEvents().subscribe(
-      res => 
-      {
-        this.eventList = res;
-      console.log(this.eventList);
-      }
-    )
+    // this.utilityService.getPrevEvents().subscribe(
+    //   res => 
+    //   {
+    //     this.eventList = res;
+    //   console.log(this.eventList);
+    //   }
+    // )
   // this.http.get("https://dynamicview.smartsheet.com/views/f1793b24-a77c-48a4-b687-095ef782fdbe").subscribe( res=>
   // {
   //   console.log(res);
   // })
 
+
+
+  this.utilityService.getEventListFromProcess().subscribe( res=>
+    {
+      this.eventList = res;
+      console.log(this.eventList);
+    })
+
+  }
+  
+  gotoHonarariumRequest(eventId : any, eventType : any){
+    this.router.navigate(['honararium-payment-request'],
+    { queryParams: { 'eventid': eventId, 'eventType' : eventType }}
+        )
   }
 
 }

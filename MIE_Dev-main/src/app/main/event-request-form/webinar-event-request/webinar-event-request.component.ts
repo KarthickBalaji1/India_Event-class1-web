@@ -41,7 +41,7 @@ export class WebinarEventRequestComponent implements OnInit {
   eventDetails : any;
   hcpRoles : any
   vendorDetails : any;
-  
+  expenseType : any
  
 
   // Upload Deviationn
@@ -156,6 +156,10 @@ export class WebinarEventRequestComponent implements OnInit {
         if(Boolean(res)) this.slideKitDetails = res;
       }
     )
+    // Get Expense Types
+    utilityService.getExpenseType().subscribe(
+      res => this.expenseType = res
+    )
     
     this.eventInitiation1 = new FormGroup({
       withIn30DaysDeviation : new FormControl(''),
@@ -202,6 +206,8 @@ export class WebinarEventRequestComponent implements OnInit {
       isHonararium : new FormControl('No',Validators.required),
       isAccomRequired : new FormControl('No',Validators.required),
       localConveyanceAmount : new FormControl(0,Validators.required),
+      uploadNOC : new FormControl('',),
+      rationale : new FormControl(0,),
     })
 
     this.eventInitiatio4Honararium = new FormGroup({
@@ -215,8 +221,6 @@ export class WebinarEventRequestComponent implements OnInit {
       // isHonararium : new FormControl('No',[Validators.required]),
       currency : new FormControl('',Validators.required),
       taxSelection : new FormControl('',Validators.required),
-      uploadNOC : new FormControl('',),
-      rationale : new FormControl(0,),
       bankAccountNumber : new FormControl('',),
       benificiaryName : new FormControl('',Validators.required),
      
@@ -564,6 +568,8 @@ export class WebinarEventRequestComponent implements OnInit {
 
 
 
+ 
+
   // Event Initiation Form4 Control
   
   approvedSpeakers : any;
@@ -646,7 +652,7 @@ export class WebinarEventRequestComponent implements OnInit {
   filteredSpeakerByName : any
 
   hideSpeakerMisCode : boolean = true;
-  showRationale :boolean = true;
+  showRationale :boolean = false;
 
   event4FormSpeakerPrepopulate(){
     console.log(this.approvedSpeakers)
@@ -694,7 +700,7 @@ export class WebinarEventRequestComponent implements OnInit {
             this.speakerName  = filteredSpeaker.SpeakerName;
             this.speakerCode = filteredSpeaker.SpeakerCode;
             this.speakerSpeciality = filteredSpeaker.Speciality;
-            this.speakerGoNonGo = (filteredSpeaker.isNonGO == "yes")? 'Non GO' : 'GO';
+            this.speakerGoNonGo = (filteredSpeaker.isNonGO.toLowerCase() == "yes")? 'Non GO' : 'GO';
             this.speakerTier = filteredSpeaker.TierType; 
             this.speakerMisCode = changes.speakerMisCode;
 
@@ -804,7 +810,7 @@ export class WebinarEventRequestComponent implements OnInit {
           }
 
         }
-        if(this.otherGoNonGo == 'GO'){
+        if(!this.otherGoNonGo.toLowerCase().includes('n')){
           this.showRationale = true;
         }
         else this.showRationale = false;
@@ -882,14 +888,14 @@ export class WebinarEventRequestComponent implements OnInit {
             this.trainerCode = filteredTrainer.TrainerCode;
             this.trainerSpeciality = filteredTrainer.Speciality;
             this.trainerTier = filteredTrainer.TierType;
-            this.trainerGoNonGo = (filteredTrainer.Is_NONGO == "yes")?'Non Go':'Go';
+            this.trainerGoNonGo = (filteredTrainer.Is_NONGO == "yes")?'Non GO':'GO';
             this.trainerMisCode = changes.trainerMisCode;
           }
           
 
         }
 
-        if(this.trainerGoNonGo == 'Go'){
+        if(this.trainerGoNonGo == 'GO'){
           this.showRationale = true;
         }
         else this.showRationale = false;
@@ -1044,7 +1050,7 @@ export class WebinarEventRequestComponent implements OnInit {
         hcpValidity++;
       }
 
-    if(this.isHonararium && this.showRationale && this.eventInitiatio4Honararium.value.rationale == 0){
+    if (this.showRationale && this.eventInitiation4Sub.value.rationale == 0){
       alert("Rationale Amount is missing");
       hcpValidity++;
     }
@@ -1054,7 +1060,10 @@ export class WebinarEventRequestComponent implements OnInit {
       alert("Travel Deatails are missing")
       hcpValidity++;
     }
-    
+    if(this.eventInitiation4Sub.value.isAdvanceRequired.invalid){
+      alert("Is advance required is missing");
+      hcpValidity++;
+    }
     if(this.eventInitiation4Sub.value.isLocalConveyance == "Yes" && this.eventInitiation4Sub.value.localConveyanceAmount == 0){
       alert("Local Conveyance Amount is missing");
       hcpValidity++;
@@ -1078,8 +1087,8 @@ export class WebinarEventRequestComponent implements OnInit {
         SpeakerCode : (Boolean(this.speakerCode))? this.speakerCode+'' : " ",
         TrainerCode : (Boolean(this.trainerCode))? this.trainerCode+'' : " ",
         Speciality : (Boolean(this.speakerSpeciality))? this.speakerSpeciality+'' : this.trainerSpeciality,
-        Tier : (Boolean(this.speakerTier))? this.speakerTier : this.trainerTier+'',
-        Rationale : (this.isHonararium && this.showRationale)? this.eventInitiatio4Honararium.value.rationale+'' : 0+'',
+        Tier : (Boolean(this.speakerTier))? this.speakerTier+'' : this.trainerTier+'',
+        Rationale : (this.isHonararium && this.showRationale)? this.eventInitiation4Sub.value.rationale+'' : 0+'',
         PresentationDuration : honarariumDuration.presentationDuration+'' ,
         PanelSessionPreperationDuration :  honarariumDuration.panelSessionPreparation+'',
         PanelDisscussionDuration : honarariumDuration.panelDiscussionDuration+'',
@@ -1281,7 +1290,7 @@ export class WebinarEventRequestComponent implements OnInit {
         alert("Max of 8 hours only")
         }
         console.log(changes)
-        if(changes.currency == 'other'){
+        if(changes.currency == 'Others'){
           this.showOtherCurrencyTextBox = true;
         }
         else{

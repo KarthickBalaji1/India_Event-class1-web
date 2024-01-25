@@ -218,6 +218,12 @@ import { MenariniApiUrl } from '../../config/menarini-api-url-config';
     return this._http.post('http://localhost:5098/api/PostReqestSheets/AddEventSettlementData',data)
   }
 
+  // get event list 
+  getEventListFromProcess()
+  {
+    return this._http.get(MenariniApiUrl.getEventList)
+  }
+
   
 //   getInviteesData()
 //   {

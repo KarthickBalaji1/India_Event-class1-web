@@ -199,6 +199,8 @@ export class Class1EventRequestComponent implements OnInit {
       isHonararium : new FormControl('No',Validators.required),
       isAccomRequired : new FormControl('No',Validators.required),
       localConveyanceAmount : new FormControl(0,Validators.required),
+      uploadNOC : new FormControl('',),
+      rationale : new FormControl(0,),
     })
 
     this.eventInitiatio4Honararium = new FormGroup({
@@ -212,8 +214,7 @@ export class Class1EventRequestComponent implements OnInit {
       // isHonararium : new FormControl('No',[Validators.required]),
       currency : new FormControl('',Validators.required),
       taxSelection : new FormControl('',Validators.required),
-      uploadNOC : new FormControl('',),
-      rationale : new FormControl(0,),
+     
       bankAccountNumber : new FormControl('',),
       benificiaryName : new FormControl('',Validators.required),
      
@@ -245,39 +246,39 @@ export class Class1EventRequestComponent implements OnInit {
       accomAmount : new FormControl(0)
     })
 
-    this.panalselectionstandard = new FormGroup({
-      uploadFCPA: new FormControl('',[Validators.required]),
-      isHonararium:new FormControl('',[Validators.required]),
-      honorariumAmount:new FormControl('',),
-      uploadNOC : new FormControl('',),
-      rationale : new FormControl('',),
-      isTravelRequired:new FormControl('',[Validators.required]),
-      travelAmount : new FormControl(''),
+    // this.panalselectionstandard = new FormGroup({
+    //   uploadFCPA: new FormControl('',[Validators.required]),
+    //   isHonararium:new FormControl('',[Validators.required]),
+    //   honorariumAmount:new FormControl('',),
+    //   uploadNOC : new FormControl('',),
+    //   rationale : new FormControl('',),
+    //   isTravelRequired:new FormControl('',[Validators.required]),
+    //   travelAmount : new FormControl(''),
     
-      travelType : new FormControl(''),
-      travelamount:new FormControl('',[Validators.required]),
-      isBTCBTE:new FormControl('',[Validators.required]),
-      isAccomRequired: new FormControl('',[Validators.required]),
-      accomAmount:new FormControl('',[Validators.required]),
+    //   travelType : new FormControl(''),
+    //   travelamount:new FormControl('',[Validators.required]),
+    //   isBTCBTE:new FormControl('',[Validators.required]),
+    //   isAccomRequired: new FormControl('',[Validators.required]),
+    //   accomAmount:new FormControl('',[Validators.required]),
       
-      isBTCBTE1:new FormControl('',[Validators.required]),
-      localConveyance:new FormControl('',[Validators.required]),
-      localAmount:new FormControl('',[Validators.required]),
-      timecalculationhonorariumifYes:new FormControl('',Validators.required),
-      presentationDuration:new FormControl('',[Validators.required]),
-      panelSessionPreparation:new FormControl('',[Validators.required]),
-      qaSession:new FormControl('',[Validators.required]),
-      briefingDuration:new FormControl('',[Validators.required]),
-      panelDiscussionDuration:new FormControl('',[Validators.required]),
-      localConveyanceinvitees:new FormControl('',[Validators.required]),
-      localInviteeAmount:new FormControl('',[Validators.required]),
-      localBTCBTE:new FormControl('',[Validators.required]),
-      InviteeName:new FormControl('',[Validators.required]),
-      InviteeEmail:new FormControl('',[Validators.required]),
-      BTCTotalAmount:new FormControl('',[Validators.required]),
-      BTETotalAmount:new FormControl('',[Validators.required]),
-      BudgetAmount:new FormControl('',[Validators.required])
-    })
+    //   isBTCBTE1:new FormControl('',[Validators.required]),
+    //   localConveyance:new FormControl('',[Validators.required]),
+    //   localAmount:new FormControl('',[Validators.required]),
+    //   timecalculationhonorariumifYes:new FormControl('',Validators.required),
+    //   presentationDuration:new FormControl('',[Validators.required]),
+    //   panelSessionPreparation:new FormControl('',[Validators.required]),
+    //   qaSession:new FormControl('',[Validators.required]),
+    //   briefingDuration:new FormControl('',[Validators.required]),
+    //   panelDiscussionDuration:new FormControl('',[Validators.required]),
+    //   localConveyanceinvitees:new FormControl('',[Validators.required]),
+    //   localInviteeAmount:new FormControl('',[Validators.required]),
+    //   localBTCBTE:new FormControl('',[Validators.required]),
+    //   InviteeName:new FormControl('',[Validators.required]),
+    //   InviteeEmail:new FormControl('',[Validators.required]),
+    //   BTCTotalAmount:new FormControl('',[Validators.required]),
+    //   BTETotalAmount:new FormControl('',[Validators.required]),
+    //   BudgetAmount:new FormControl('',[Validators.required])
+    // })
 
     this.inviteeSelectionForm = new FormGroup({
       inviteesFrom : new FormControl('',Validators.required),
@@ -635,7 +636,7 @@ export class Class1EventRequestComponent implements OnInit {
   filteredSpeakerByName : any
 
   hideSpeakerMisCode : boolean = true;
-  showRationale :boolean = true;
+  showRationale :boolean = false;
 
   event4FormSpeakerPrepopulate(){
     console.log(this.approvedSpeakers)
@@ -683,7 +684,7 @@ export class Class1EventRequestComponent implements OnInit {
             this.speakerName  = filteredSpeaker.SpeakerName;
             this.speakerCode = filteredSpeaker.SpeakerCode;
             this.speakerSpeciality = filteredSpeaker.Speciality;
-            this.speakerGoNonGo = (filteredSpeaker.isNonGO == "yes")? 'Non GO' : 'GO';
+            this.speakerGoNonGo = (filteredSpeaker.isNonGO.toLowerCase() == "yes")? 'Non GO' : 'GO';
             this.speakerTier = filteredSpeaker.TierType; 
             this.speakerMisCode = changes.speakerMisCode;
 
@@ -793,7 +794,7 @@ export class Class1EventRequestComponent implements OnInit {
           }
 
         }
-        if(this.otherGoNonGo == 'GO'){
+        if(!this.otherGoNonGo.toLowerCase().includes('n')){
           this.showRationale = true;
         }
         else this.showRationale = false;
@@ -871,14 +872,14 @@ export class Class1EventRequestComponent implements OnInit {
             this.trainerCode = filteredTrainer.TrainerCode;
             this.trainerSpeciality = filteredTrainer.Speciality;
             this.trainerTier = filteredTrainer.TierType;
-            this.trainerGoNonGo = (filteredTrainer.Is_NONGO == "yes")?'Non Go':'Go';
+            this.trainerGoNonGo = (filteredTrainer.Is_NONGO == "yes")?'Non GO':'GO';
             this.trainerMisCode = changes.trainerMisCode;
           }
           
 
         }
 
-        if(this.trainerGoNonGo == 'Go'){
+        if(this.trainerGoNonGo == 'GO'){
           this.showRationale = true;
         }
         else this.showRationale = false;
@@ -1033,7 +1034,7 @@ export class Class1EventRequestComponent implements OnInit {
         hcpValidity++;
       }
 
-    if(this.isHonararium && this.showRationale && this.eventInitiatio4Honararium.value.rationale == 0){
+    if (this.showRationale && this.eventInitiation4Sub.value.rationale == 0){
       alert("Rationale Amount is missing");
       hcpValidity++;
     }
@@ -1071,7 +1072,7 @@ export class Class1EventRequestComponent implements OnInit {
         TrainerCode : (Boolean(this.trainerCode))? this.trainerCode+'' : " ",
         Speciality : (Boolean(this.speakerSpeciality))? this.speakerSpeciality+'' : this.trainerSpeciality,
         Tier : (Boolean(this.speakerTier))? this.speakerTier+'' : this.trainerTier+'',
-        Rationale : (this.isHonararium && this.showRationale)? this.eventInitiatio4Honararium.value.rationale+'' : 0+'',
+        Rationale : (this.isHonararium && this.showRationale)? this.eventInitiation4Sub.value.rationale+'' : 0+'',
         PresentationDuration : honarariumDuration.presentationDuration+'' ,
         PanelSessionPreperationDuration :  honarariumDuration.panelSessionPreparation+'',
         PanelDisscussionDuration : honarariumDuration.panelDiscussionDuration+'',
@@ -1273,7 +1274,7 @@ export class Class1EventRequestComponent implements OnInit {
         alert("Max of 8 hours only")
         }
         console.log(changes)
-        if(changes.currency == 'other'){
+        if(changes.currency == 'Others'){
           this.showOtherCurrencyTextBox = true;
         }
         else{
@@ -1638,13 +1639,16 @@ export class Class1EventRequestComponent implements OnInit {
     
     this.expenseSelectionForm.valueChanges.subscribe(
       changes => {
-        if(changes.expenseType == 'foodAndBeverages'){
+        if(changes.expenseType.includes('Food & Beverages') && changes.isExcludingTax == 'No'){
           if(changes.expenseAmount/this.inviteeTableDetails.length > 1500){
             this.showExpenseDeviation = true;
           }
           else{
             this.showExpenseDeviation = false;
           }
+        }
+        else{
+          this.showExpenseDeviation = false;
         }
         
       }

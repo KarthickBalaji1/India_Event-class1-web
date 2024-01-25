@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { ActivatedRoute } from '@angular/router';
 import { data, event } from 'jquery';
 import { UtilityService } from 'src/app/shared/services/event-utility/utility-service.service';
 import { ModalComponent } from 'src/app/utility/modal/modal.component';
@@ -16,7 +17,8 @@ export class HonarariumPaymentRequestComponent implements OnInit {selectedEvent 
 // Event List 
 eventList : any;
 
-constructor(private utility: UtilityService) { 
+constructor(private utility: UtilityService,
+  private activatedRoute : ActivatedRoute) { 
   
   
   utility.getEventTypes().subscribe(
@@ -33,6 +35,17 @@ constructor(private utility: UtilityService) {
   utility.getPreviousEventsFast();
 }  ngOnInit() {
 
+  this.activatedRoute.queryParams.subscribe(params => {
+    console.log('param', params);
+    if(params.eventid && params.eventType){
+      if(params.eventType == 'Class I'){
+        console.log(params.eventType);
+        this.selectedEvent = 'EVTC1'
+      }
+    }
+  })
+
 }
+
 
 }

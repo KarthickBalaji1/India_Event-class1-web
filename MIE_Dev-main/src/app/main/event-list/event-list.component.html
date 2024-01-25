@@ -8,21 +8,25 @@
                 <h4 class="card-title">Event Request List</h4>
             </div>
     <div class="container table-responsive table-bordered ">
-        <table class="table text-center table-striped">
+        <table class="table text-center table-striped overflow-hidden ">
           <thead>
             <tr>
-              <th><small>S.no</small></th>
-              <th><small>Event ID</small></th>
-              <th><small>Event Name</small></th>
-              <th><small>Event Type</small></th>
-              <th><small>Venue</small></th>
-              <th><small>Event Date & Time</small></th>
-              <th><small>Event Request Status</small></th>
-              <th><small>View Event Request</small></th>
-              <th><small>Honorarium Request Status</small></th>
-              <th><small>View Honorarium Request</small></th>
-              <th><small>Post Event Request</small></th>
-              <th><small>View Post Event Request</small></th>
+              <th><small><b>S.no</b></small></th>
+              <th><small><b>Event ID</b></small></th>
+              <th><small><b>Event Name</b></small></th>
+              <th><small><b>Event Type</b></small></th>
+              <th><small><b>Venue</b></small></th>
+              <th><small><b>Event Date & Time</b></small></th>
+              <th><small><b>Event Request Status</b></small></th>
+              <th><small><b>Agreement</b></small></th>
+              <th><small><b>Create Honorarium Request</b></small></th>
+              <th><small><b>View Event Request</b></small></th>
+              <th><small><b>Honorarium Request Status</b></small></th>
+              <th><small><b>Create Honorarium Request</b></small></th>
+              <th><small><b>View Honorarium Request</b></small></th>
+              <th><small><b>Create Post Event Request</b></small></th>
+              <th><small><b>Post Event Settlemtn Status</b></small></th>
+              <th><small><b>View Post Event Request</b></small></th>
             </tr>
           </thead>
           <tbody *ngFor="let events of eventList; index as i">
@@ -33,6 +37,16 @@
               <td>{{events.EventType}}</td>
               <td>{{events.VenueName}}</td>
               <td>{{events.EventDate}}</td>
+              <td>{{events['Event Request Status']}}</td>
+              <td><a href="#">download</a></td>
+              <td><span (click)="gotoHonarariumRequest(events['EventId/EventRequestId'],events.EventType)" style="color: blueviolet; cursor: pointer; text-decoration: underline;" >Honararium Request</span></td>
+              <td><a href="#">View</a></td>
+              <td>{{events['Honorarium Request Status']}}</td>
+              <td><a href="#">Create</a></td>
+              <td><a href="#">View</a></td>
+              <td><a href="#">Create</a></td>
+              <td>{{events['Post Event Request status']}}</td>
+              <td><a href="#">View</a></td>
             </tr>
 
           </tbody>
