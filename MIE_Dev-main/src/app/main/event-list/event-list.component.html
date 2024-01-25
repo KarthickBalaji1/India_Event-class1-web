@@ -1,0 +1,49 @@
+
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+                <h4 class="card-title">Event Request List</h4>
+            </div>
+    <div class="container table-responsive table-bordered ">
+        <table class="table text-center table-striped">
+          <thead>
+            <tr>
+              <th><small>S.no</small></th>
+              <th><small>Event ID</small></th>
+              <th><small>Event Name</small></th>
+              <th><small>Event Type</small></th>
+              <th><small>Venue</small></th>
+              <th><small>Event Date & Time</small></th>
+              <th><small>Event Request Status</small></th>
+              <th><small>View Event Request</small></th>
+              <th><small>Honorarium Request Status</small></th>
+              <th><small>View Honorarium Request</small></th>
+              <th><small>Post Event Request</small></th>
+              <th><small>View Post Event Request</small></th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let events of eventList; index as i">
+            <tr>
+              <th scope="row">{{i+1}}</th>
+              <td>{{events['EventId/EventRequestId']}}</td>
+              <td>{{events['Event Topic']}}</td>
+              <td>{{events.EventType}}</td>
+              <td>{{events.VenueName}}</td>
+              <td>{{events.EventDate}}</td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      
