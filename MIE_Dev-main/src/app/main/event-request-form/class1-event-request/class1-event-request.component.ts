@@ -1068,10 +1068,10 @@ export class Class1EventRequestComponent implements OnInit {
       const HcpData  = {
         // For API
         EventIdorEventRequestId : " ",
-        SpeakerCode : (Boolean(this.speakerCode))? this.speakerCode+'' : " ",
-        TrainerCode : (Boolean(this.trainerCode))? this.trainerCode+'' : " ",
+        SpeakerCode : (Boolean(this.speakerCode))? this.speakerCode+' ' : " ",
+        TrainerCode : (Boolean(this.trainerCode))? this.trainerCode+' ' : " ",
         Speciality : (Boolean(this.speakerSpeciality))? this.speakerSpeciality+'' : this.trainerSpeciality,
-        Tier : (Boolean(this.speakerTier))? this.speakerTier+'' : this.trainerTier+'',
+        Tier : (Boolean(this.speakerTier))? this.speakerTier+' ' : this.trainerTier+' ',
         Rationale : (this.isHonararium && this.showRationale)? this.eventInitiation4Sub.value.rationale+'' : 0+'',
         PresentationDuration : honarariumDuration.presentationDuration+'' ,
         PanelSessionPreperationDuration :  honarariumDuration.panelSessionPreparation+'',

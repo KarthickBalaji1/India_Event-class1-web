@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { ActivatedRoute } from '@angular/router';
 import { data, event } from 'jquery';
 import { UtilityService } from 'src/app/shared/services/event-utility/utility-service.service';
 import { ModalComponent } from 'src/app/utility/modal/modal.component';
@@ -29,11 +30,15 @@ export class Class1HonorariumRequestComponent implements OnInit{
   showuploadifGSTyes: boolean = false;
   pageSizeOptions: number[];
 
+  showEventSelect : boolean = false;
 
 
 
 
-  constructor(private utilityService: UtilityService,private dialog : MatDialog) {
+
+  constructor(private utilityService: UtilityService,
+              private dialog : MatDialog,
+              private activatedRoute : ActivatedRoute) {
     this.honorarium = new FormGroup({
       //isAfter2Days:new FormControl('',[Validators.required]),
       uploadDeviation: new FormControl('', [Validators.required]),
@@ -46,24 +51,48 @@ export class Class1HonorariumRequestComponent implements OnInit{
       UploadDetails1: new FormControl(''),
       EventId: new FormControl('')
     })
-    this.After2WorkingDays(this.utilityService.getPreviousEvents());
+   
     
 
   }
+ 
   ngOnInit(): void {
-    this.showUpload();
-    this.showingDetails();
-    this.honorarium.valueChanges.subscribe(changes=>
-      {
-        if(changes.EventId){
-          this.honortableDetails = [];
-          console.log(changes.EventId)
-          this.selectedEvent = changes.EventId;
-          this.filterHonor(changes.EventId);
-          // console.log(this.honortableDetails);
-          
+    // this.showingDetails();
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      if(params.eventId && params.eventType){
+        this.utilityService.getPrevEvents().subscribe(
+          res => {
+            this.eventListafter2days.push(res.find(eve => eve['EventId/EventRequestId'] == params.eventId));
+            this.utilityService.honorariumDetails().subscribe(honoDetails => {
+              this.honorarDetails = honoDetails;
+              this.filterHonor(params.eventId)
+          })
         }
-      })
+        )
+        
+      }
+      else{
+        this.showEventSelect = true;
+        this.showingDetails;
+        this.showUpload();
+        this.honorarium.valueChanges.subscribe(changes=>
+          {
+            if(changes.EventId){
+              this.honortableDetails = [];
+              console.log(changes.EventId)
+              this.selectedEvent = changes.EventId;
+              this.filterHonor(changes.EventId);
+              // console.log(this.honortableDetails);
+              
+            }
+          })
+    
+        this.After2WorkingDays(this.utilityService.getPreviousEvents());
+      }
+    })
+
+
     // console.log(this.length);
   }
 
@@ -121,7 +150,9 @@ export class Class1HonorariumRequestComponent implements OnInit{
   selectedEvent : any;
 
   filterHonor(eventId:any){
-    console.log(eventId);
+    // console.log(eventId);
+    console.log('Filtere Honor called')
+
    if(Boolean(this.honorarDetails))
    {
     
@@ -138,6 +169,8 @@ export class Class1HonorariumRequestComponent implements OnInit{
       this.gstRadio.push(i)
       this.disableGST.push(true);
     }
+
+    // return this.honortableDetails;
 
   }
 
@@ -156,7 +189,7 @@ export class Class1HonorariumRequestComponent implements OnInit{
       MISCode :(Boolean(honor.MISCode))?honor.MISCode:" ",
       GONGO : (Boolean(honor.GONGO))?honor.GONGO:"",
       IsItincludingGST : this.honorarium.value.isItIncludingGST,
-      AgreementAmount : (Boolean(honor.AgreementAmount))?honor.AgreementAmount:"No",
+      AgreementAmount : (Boolean(honor.AgreementAmount))?honor.AgreementAmount+'':"No",
       HonorariumSubmitted : "Yes"
         }
        
@@ -170,9 +203,12 @@ export class Class1HonorariumRequestComponent implements OnInit{
     const requestHonorariumList = {
       RequestHonorariumList : honorariumData
     };
-    this.utilityService.addHonorariumPayment(requestHonorariumList).subscribe( changes=>
+    this.utilityService.addHonorariumPayment(requestHonorariumList).subscribe( res=>
       {
         //console.log(changes);
+        if(res.message == 'Data added successfully.'){
+          alert('Honararium Submitted Successfully')
+        }
       })
 
   }

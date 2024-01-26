@@ -19,7 +19,6 @@
               <th><small><b>Event Date & Time</b></small></th>
               <th><small><b>Event Request Status</b></small></th>
               <th><small><b>Agreement</b></small></th>
-              <th><small><b>Create Honorarium Request</b></small></th>
               <th><small><b>View Event Request</b></small></th>
               <th><small><b>Honorarium Request Status</b></small></th>
               <th><small><b>Create Honorarium Request</b></small></th>
@@ -29,8 +28,8 @@
               <th><small><b>View Post Event Request</b></small></th>
             </tr>
           </thead>
-          <tbody *ngFor="let events of eventList; index as i">
-            <tr>
+          <tbody>
+            <tr *ngFor="let events of eventList; index as i">
               <th scope="row">{{i+1}}</th>
               <td>{{events['EventId/EventRequestId']}}</td>
               <td>{{events['Event Topic']}}</td>
@@ -38,15 +37,14 @@
               <td>{{events.VenueName}}</td>
               <td>{{events.EventDate}}</td>
               <td>{{events['Event Request Status']}}</td>
-              <td><a href="#">download</a></td>
-              <td><span (click)="gotoHonarariumRequest(events['EventId/EventRequestId'],events.EventType)" style="color: blueviolet; cursor: pointer; text-decoration: underline;" >Honararium Request</span></td>
-              <td><a href="#">View</a></td>
+              <td><span class="text-primary">download</span></td>
+              <td><span class="text-primary">View</span></td>
               <td>{{events['Honorarium Request Status']}}</td>
-              <td><a href="#">Create</a></td>
-              <td><a href="#">View</a></td>
-              <td><a href="#">Create</a></td>
+              <td><span (click)="gotoHonarariumRequest(events['EventId/EventRequestId'],events.EventType,events)" style="color: blueviolet; cursor: pointer; text-decoration: underline;" >Create</span></td>
+              <td><span class="text-primary">View</span></td>
+              <td><span (click)="gotoEvenSettlementRequest(events['EventId/EventRequestId'],events.EventType,events)" style="color: blueviolet; cursor: pointer; text-decoration: underline;" >Create</span></td>
               <td>{{events['Post Event Request status']}}</td>
-              <td><a href="#">View</a></td>
+              <td><span class="text-primary">View</span></td>
             </tr>
 
           </tbody>

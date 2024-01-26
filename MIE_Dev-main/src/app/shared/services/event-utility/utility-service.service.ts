@@ -30,7 +30,7 @@ import { MenariniApiUrl } from '../../config/menarini-api-url-config';
     return this.previousEvents;
   }
 
-  getPrevEvents(){
+  getPrevEvents():Observable<any>{
     return this._http.get(MenariniApiUrl.getpreviousEventDataApi);
   }
 
@@ -138,7 +138,7 @@ import { MenariniApiUrl } from '../../config/menarini-api-url-config';
     }
 
     // adding honorarium data 
-    addHonorariumPayment(data:any)
+    addHonorariumPayment(data:any):Observable<any>
     {
         return this._http.post(MenariniApiUrl.honorariumRequestAddDataApi,data);
     }

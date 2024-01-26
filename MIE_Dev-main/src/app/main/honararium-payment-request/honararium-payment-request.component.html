@@ -10,7 +10,7 @@
 
           <!-- Page Body -->
           <div class="card-body" >
-            <app-class1-honorarium-request *ngIf="selectedEvent == 'EVTC1'"></app-class1-honorarium-request>
+            <!-- <app-class1-honorarium-request *ngIf="selectedEvent == 'EVTC1'"></app-class1-honorarium-request> -->
             <app-webinar-honorarium-request *ngIf="selectedEvent == 'EVTWEB'"></app-webinar-honorarium-request>
             
               <div class="row">
@@ -23,7 +23,7 @@
                                 <div class="col-md-6">
                                     <mat-form-field color="accent" appearance="outline" class="example-full-width" >
                                         <mat-label>Select Event Type</mat-label>
-                                        <mat-select required [(ngModel)]="selectedEvent">
+                                        <mat-select (ngModelChange)='onEventSelect($event)' required [(ngModel)]="selectedEvent">
                                           <mat-option *ngFor="let event of eventList" value="{{event.EventTypeId}}">{{event.EventType}}</mat-option>
                                          
                                         </mat-select>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 import { data, event } from 'jquery';
 import { UtilityService } from 'src/app/shared/services/event-utility/utility-service.service';
 import { ModalComponent } from 'src/app/utility/modal/modal.component';
@@ -17,7 +18,7 @@ export class PostEventSettlementComponent implements OnInit  {selectedEvent : st
 // Event List 
 eventList : any;
 
-constructor(private utility: UtilityService) { 
+constructor(private utility: UtilityService, private router : Router) { 
   
   
   utility.getEventTypes().subscribe(
@@ -31,9 +32,19 @@ constructor(private utility: UtilityService) {
 
   )
 
-  utility.getPreviousEventsFast();
-}  ngOnInit() {
+ 
+}  
+
+ngOnInit() {
+  this.utility.getPreviousEventsFast();
 
 }
+
+  onEventSelect(eventType){
+    // console.log(eventType)
+    if(eventType == 'EVTC1'){
+      this.router.navigate(['event-settlement']);
+    }
+  }
 
 }

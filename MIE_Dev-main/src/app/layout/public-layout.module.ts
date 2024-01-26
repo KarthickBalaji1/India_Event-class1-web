@@ -21,8 +21,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatTableModule} from '@angular/material/table';
 
 
-
-
+//toastr module
 
 
 
@@ -49,6 +48,8 @@ import { WebinarHonorariumRequestComponent } from '../main/event-honorarium-requ
 import { Class1PostEventSettlementComponent } from '../main/post-event-settlement-requests/class1-post-event-settlement/class1-post-event-settlement.component';
 import { WebinarPostEventSettlementComponent } from '../main/post-event-settlement-requests/webinar-post-event-settlement/webinar-post-event-settlement.component';
 
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -67,7 +68,10 @@ import { WebinarPostEventSettlementComponent } from '../main/post-event-settleme
     MatRadioModule,
     UtilityModule,
     MatCheckboxModule,
-    MatTableModule
+    MatTableModule,
+    
+    
+    
     
     
   ],

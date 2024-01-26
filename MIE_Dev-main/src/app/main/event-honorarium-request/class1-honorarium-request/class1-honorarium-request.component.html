@@ -1,8 +1,13 @@
-
-  
-  
-  
-            <div class="card-body">
+<!-- Page Header -->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+              <h4 class="card-title">Class 1 Honararium Request</h4>
+          </div>
+             <div class="card-body">
               <div class="container table-responsive table-bordered">
                 <table class="table text-center table-striped">
                   <thead>
@@ -65,8 +70,8 @@
   
                       </div>
   
-                      <div class="col">
-                        <mat-form-field color="accent" appearance="outline">
+                      <div class="col" >
+                        <mat-form-field color="accent" appearance="outline" *ngIf="showEventSelect">
                           <mat-label>Select Event ID</mat-label>
                           <mat-select formControlName="EventId">
                             <mat-option *ngFor="let selectId of eventListafter2days" value="{{selectId['EventId/EventRequestId']}}">{{selectId['EventId/EventRequestId']}}</mat-option>

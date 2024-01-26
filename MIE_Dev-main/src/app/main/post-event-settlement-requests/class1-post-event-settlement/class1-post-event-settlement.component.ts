@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { ActivatedRoute } from '@angular/router';
 import { data, event } from 'jquery';
 import { UtilityService } from 'src/app/shared/services/event-utility/utility-service.service';
 import { ModalComponent } from 'src/app/utility/modal/modal.component';
@@ -27,6 +28,7 @@ export class Class1PostEventSettlementComponent implements OnInit   {
   totalAttendance : number = 0;
 
   showInviteeDeviation : boolean = false;
+  showEventSelect :  boolean = false;
 
   expense : any;
 
@@ -54,60 +56,8 @@ export class Class1PostEventSettlementComponent implements OnInit   {
   amountToPayForInitiator : any = 0;
   amountToPayForCompany : any = 0;
 
-    constructor(private utilityService : UtilityService) {
-      
-  
-      this.PostEventSettlement = new FormGroup({
-       // dayssince: new FormControl('',Validators.required),
-        uploadDeviation: new FormControl('',Validators.required),
-        TotalAttendance: new FormControl('',Validators.required),
-        itCompanysBTCBTE: new FormControl('',Validators.required),
-        Expense: new FormControl('',Validators.required),
-        costperparticipant: new FormControl('',Validators.required),
-        Amount: new FormControl('',Validators.required),
-        CostperparticipantINR: new FormControl('',Validators.required),
-        includingGST: new FormControl('',Validators.required),
-        uploadDeviation1: new FormControl('',Validators.required),
-        actualAmount : new FormControl(''),
-        inviteeIsPresent : new FormControl('',),
+    constructor(private utilityService : UtilityService, private activatedRoute : ActivatedRoute) {
 
-  
-      })
-
-      this.allEventList = utilityService.getPreviousEvents();
-
-      utilityService.getInviteesFast().subscribe(res => {
-        this.invitees = res
-      });
-
-      if(this.allEventList){
-        this.after30Days(this.allEventList);
-      }
-      else{
-        utilityService.getInviteesFast().subscribe(res => {
-          this.invitees = res
-        });
-        console.log('qqq', utilityService.getPreviousEvents() )
-      }
-
-      utilityService.getExpenseType().subscribe(
-        res => this.expenseType = res
-      )
-     
-      
-     
-      
-      // this.invitees = this.utilityService.getInviteesData();
-      // this.addInviteePrePopulate();
-
-      utilityService.getPostEventExpense().subscribe(
-        res => {
-          console.log(res);
-          this.expense = res;
-
-        }
-      )
-     
       this.addExpenseForm = new FormGroup({
         expenseType : new FormControl('',Validators.required),
         expenseAmountWithoutGST : new FormControl(0,),
@@ -118,15 +68,54 @@ export class Class1PostEventSettlementComponent implements OnInit   {
     
     }
 
-    addInviteePrePopulate(){
-      // console.log(this.invitees)
-     if(Boolean(this.inviteeTableDetails)){
-      for(let i=0;i<this.inviteeTableDetails.length;i++){
-        this.inviteeTableIsPresentCheckBox.push(i);
-        // this.expenseTableActualAmountInput.push(i+'actual-amount')
-      }
-     }
-    }
+    ngOnInit(): void {
+
+      // this.utilityService.getPrevEvents().subscribe(res => {
+      //   this.allEventList = res;
+      //   this.after30Days(this.allEventList);
+      // });
+
+      this.utilityService.getInviteesFast().subscribe(res => {
+        this.invitees = res
+      });
+
+      this.utilityService.getExpenseType().subscribe(
+        res => this.expenseType = res
+      );
+
+      this.utilityService.getPostEventExpense().subscribe(
+        res => {
+          // console.log(res);
+          this.expense = res;
+
+        }
+      )
+
+      this.activatedRoute.queryParams.subscribe(params => {
+        if(params.eventId && params.eventType){
+          this.utilityService.getPrevEvents().subscribe(res => {
+            this.allEventList = res;
+            this.after30DaysList.push(res.find(eve => eve['EventId/EventRequestId'] == params.eventId));
+            this.onEventSelect(params.eventId)
+          })
+        }
+        else{
+          this.showEventSelect = true;
+          this.allEventList = this.utilityService.getPreviousEvents();
+          this.after30Days(this.allEventList);
+         
+        }
+      })
+      
+       
+     
+      this.addExpenseFormPrePopulate();
+
+      
+   }
+
+   
+    
 
     inviteePresent(value:any){
      console.log(value)
@@ -198,13 +187,7 @@ export class Class1PostEventSettlementComponent implements OnInit   {
   
   
   
-    ngOnInit(): void {
-       
-       this.showingUpload();
-       this.addExpenseFormPrePopulate();
-
-       
-    }
+  
 
     selectedEventDetails : any;
 
@@ -276,7 +259,7 @@ export class Class1PostEventSettlementComponent implements OnInit   {
           this.expenseTabelDetails.push(expense);
           // this.expenseTableDetailCopy.push(expense);
         }
-        
+        console.log('Expense Details', this.expenseTabelDetails)
        
        
       })
@@ -292,6 +275,12 @@ export class Class1PostEventSettlementComponent implements OnInit   {
           this.amountTableFinalAmount += res
           this.advancedUtilized += res
          }
+        },
+        err => {
+          console.log(err);
+          this.panelSelectionFinalAmount = 0
+          this.amountTableFinalAmount += 0
+          this.advancedUtilized += 0
         }
       )
 
@@ -300,7 +289,14 @@ export class Class1PostEventSettlementComponent implements OnInit   {
           if(Boolean(res)){
             this.inviteesFinalAmount = res;
             this.amountTableFinalAmount += res;
+            this.advancedUtilized += res
           }
+        },
+        err => {
+          // console.log(err);
+          this.inviteesFinalAmount = 0;
+          this.amountTableFinalAmount += 0;
+          this.advancedUtilized += 0;
         }
       )
 
@@ -310,9 +306,16 @@ export class Class1PostEventSettlementComponent implements OnInit   {
           if(Boolean(res)){
             this.expenseFinalAmount = res;
             this.amountTableFinalAmount += res;
+            this.advancedUtilized += res
           }
           
           // this.amountTableFinalAmount = parseInt(this.expenseFinalAmount) + parseInt(this.inviteesFinalAmount) + parseInt(this.panelSelectionFinalAmount);
+        },
+        err => {
+          // console.log(err)
+          this.expenseFinalAmount = 0;
+          this.amountTableFinalAmount += 0;
+          this.advancedUtilized += 0;
         }
       )
 
@@ -330,21 +333,7 @@ export class Class1PostEventSettlementComponent implements OnInit   {
         alert('This Event has no associated data')
       }
 
-      this.advancedUtilized = this.amountTableFinalAmount;
-      // this.calculateAdvanceTableDetails();
-      // if(this.expenseTabelDetails.length > 0){
-      //   this.expenseTabelDetails.forEach(expense => {
-      //     console.log(expense.Amount)
-      //     this.advancedUtilized += parseInt(expense.Amount)
-      //   })
-      // }
-
-      // if(this.inviteeTableDetails.length > 0){
-      //   this.inviteeTableDetails.forEach(invitee => {
-      //     // console.log(invitee.LcAmount)
-      //     this.advancedUtilized += parseInt(invitee.LcAmount);
-      //   })
-      // }
+     
 
       console.log('Amou U', typeof this.amountTableFinalAmount);
       console.log('Uiii', typeof this.advancedUtilized)
@@ -404,19 +393,16 @@ export class Class1PostEventSettlementComponent implements OnInit   {
           BtcorBte : this.addExpenseForm.value.expenseBTC,
 
           // For API
-          eventId : this.selectedEventDetails['EventId/EventRequestId'],
+          EventId : ' ',
+          BtcAmount : ' ',
+          BteAmount :  ' ',
+          BudgetAmount : ' '
 
         }
 
        this.amountTableFinalAmount += expense.Amount;
         this.expenseTabelDetails2.push(expense);
-        // this.expenseTableActualAmountInput;
-       
-
-        // this.expenseTableActualAmountInput[this.expenseTableActualAmountInput.length-1] = expense.Amount + this.addExpenseForm.value.gstAmount;
-
-        // console.log(this.expenseTableActualAmountInput)
-
+        
         this.addExpenseForm.reset();
         this.addExpenseForm.controls.expenseAmountWithoutGST.setValue(0);
         this.addExpenseForm.controls.gstAmount.setValue(0);
@@ -428,15 +414,7 @@ export class Class1PostEventSettlementComponent implements OnInit   {
     }
 
   
-    showingUpload()
-    {
-     this.PostEventSettlement.valueChanges.subscribe( (res =>
-      {
-        console.log(res);
-        this.isUploadShows = (res.dayssince == 'Yes')?true:false;
-        this.isUploadGST = (res.includingGST == 'Yes')?true:false;
-      }))
-    }
+    
 
     after30DaysList: any[] =[] ;
     private  after30Days(eventList : any)
@@ -446,49 +424,24 @@ export class Class1PostEventSettlementComponent implements OnInit   {
        {
         eventList.forEach(event =>
           {
-
-           if(Boolean(event.EventDate)){
-            let today : any = new Date();
-            let eventDate = new Date(event.EventDate);
+            if(event.EventType == "Class I")
+            {
+              if(Boolean(event.EventDate)){
+                let today : any = new Date();
+                let eventDate = new Date(event.EventDate);
+        
+                let Difference_In_Time = eventDate.getTime() - today.getTime();
+        
+                let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
     
-            let Difference_In_Time = eventDate.getTime() - today.getTime();
-    
-            let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
-
-           
-            if(Difference_In_Days <= -30){
-              this.after30DaysList.push(event)
+               
+                if(Difference_In_Days <= -30){
+                  this.after30DaysList.push(event)
+                }
+               }
             }
-           }
 
-           
-    
-            // this.eventDate = changes.eventDate
-    
-            // if(Difference_In_Days <= 7){
-            //   this.show7DaysUploadDeviation = true;
-            // }
-            // else this.show7DaysUploadDeviation = false
-    
-          //  let today : any = new Date();
- 
-          //  if(event.EventDate)
-          //  {
-          //    let eventDate : any = new Date(event.EventDate);
-          //    console.log(eventDate.getTime());
-            
-
-          //  }
-              //  if(Difference_In_Time >= today.getDate())
-              //  {
-              //   console.log("hello",eventDate)
-              //  }
-              
-              //  let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
- 
-              //  if(Difference_In_Days >= 30){
-              //   
-              //  }
+          
            }
           
                 
@@ -506,40 +459,12 @@ export class Class1PostEventSettlementComponent implements OnInit   {
       this.advancedUtilized = this.amountTableFinalAmount;
       this.amountToPayForCompany = 0;
       this.amountToPayForInitiator = 0;
-      // if(this.expenseTabelDetails.length > 0){
-      //   this.expenseTabelDetails.forEach(expense => {
-      //     console.log(expense.Amount)
-      //     this.advancedUtilized += parseInt(expense.Amount)
-      //   })
-      // }
 
-      // if(this.inviteeTableDetails.length > 0){
-      //   this.inviteeTableDetails.forEach(invitee => {
-      //     // console.log(invitee.LcAmount)
-      //     this.advancedUtilized += parseInt(invitee.LcAmount);
-      //   })
-      // }
     }
 
 
     private calculateAdvanceTableDetails(){
-      
-      
-      // if(this.expenseTabelDetails.length > 0){
-      //   this.expenseTabelDetails.forEach(expense => {
-      //     console.log(expense.Amount)
-      //     this.advancedUtilized += parseInt(expense.Amount)
-      //   })
-      // }
 
-      // if(this.inviteeTableDetails.length > 0){
-      //   this.inviteeTableDetails.forEach(invitee => {
-      //     // console.log(invitee.LcAmount)
-      //     this.advancedUtilized += parseInt(invitee.LcAmount);
-      //   })
-      // }
-      // console.log('uti', this.advancedUtilized);
-      // console.log('fina', this.amountTableFinalAmount)
       if(this.amountTableFinalAmount < this.advancedUtilized ){
         this.amountToPayForCompany = 0;
         this.amountToPayForInitiator = this.advancedUtilized - this.amountTableFinalAmount;

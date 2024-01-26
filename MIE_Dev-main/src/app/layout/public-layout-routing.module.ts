@@ -22,6 +22,11 @@ import { PostEventSettlementComponent } from '../main/post-event-settlement/post
 import { EventListComponent } from '../main/event-list/event-list.component';
 import { AddEmployeesComponent } from '../main/add-employees/add-employees.component';
 import { AuthGuard } from '../shared/routeguard/auth.guard';
+import { Class1HonorariumRequestComponent } from '../main/event-honorarium-request/class1-honorarium-request/class1-honorarium-request.component';
+import { Class1PostEventSettlementComponent } from '../main/post-event-settlement-requests/class1-post-event-settlement/class1-post-event-settlement.component';
+
+
+
 
 export const PublicLayoutRoutes: Routes = [
     { path: 'dashboard', component: DashboardComponent,canActivate:[AuthGuard] },
@@ -31,7 +36,11 @@ export const PublicLayoutRoutes: Routes = [
     { path: 'view-event-list', component: EventListComponent,canActivate:[AuthGuard]   },
     { path: 'view-honararium-list', component: HonarariumListComponent,canActivate:[AuthGuard]  },
     { path: 'post-event-list', component: PostEventListComponent,canActivate:[AuthGuard]  },
-    { path: 'add-employees' , component: AddEmployeesComponent, canActivate:[AuthGuard]}
+    { path: 'add-employees' , component: AddEmployeesComponent, canActivate:[AuthGuard]},
+    // From View Events
+    { path: 'honararium-request', component : Class1HonorariumRequestComponent, canActivate:[AuthGuard]},
+    { path: 'event-settlement', component : Class1PostEventSettlementComponent, canActivate: [AuthGuard]}
+ 
   
 
 ];

@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./post-event-list.component.css']
 })
 export class PostEventListComponent implements OnInit {
+  dynamicaUrl = "https://app.smartsheet.com/b/publish?EQBCT=f6872c4a9d2f48d5b81273e52312d197Smartsheet"
 
   constructor() { }
 
