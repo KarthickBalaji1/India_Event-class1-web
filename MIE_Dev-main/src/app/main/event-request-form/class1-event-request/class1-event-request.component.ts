@@ -193,14 +193,16 @@ export class Class1EventRequestComponent implements OnInit {
     this.eventInitiation4Sub = new FormGroup({
       uploadFCPA : new FormControl(''),
       fcpaDate : new FormControl('',Validators.required),
-      isAdvanceRequired : new FormControl('',Validators.required),
+    
       isTravelRequired : new FormControl('No',Validators.required),
       isLocalConveyance : new FormControl('No',Validators.required),
       isHonararium : new FormControl('No',Validators.required),
       isAccomRequired : new FormControl('No',Validators.required),
-      localConveyanceAmount : new FormControl(0,Validators.required),
+      localConveyanceAmount : new FormControl(0,),
+      isLocalConveyBTC : new FormControl('',),
+
       uploadNOC : new FormControl('',),
-      rationale : new FormControl(0,),
+      rationale : new FormControl('',),
     })
 
     this.eventInitiatio4Honararium = new FormGroup({
@@ -294,7 +296,8 @@ export class Class1EventRequestComponent implements OnInit {
       expenseAmount : new FormControl('',Validators.required),
       isExcludingTax : new FormControl('',Validators.required),
       isExpenseBtc : new FormControl('',Validators.required),
-      uploadExpenseDeviation : new FormControl('')
+      uploadExpenseDeviation : new FormControl(''),
+      isAdvanceRequired : new FormControl('',Validators.required),
     })
 
 
@@ -992,10 +995,10 @@ export class Class1EventRequestComponent implements OnInit {
           alert("FCPA Date is missing");
           hcpValidity++;
         }
-        if(this.eventInitiation4Sub.controls.isAdvanceRequired.invalid){
-          alert("Is advance required is missing");
-          hcpValidity++;
-        }
+        // if(this.eventInitiation4Sub.controls.isAdvanceRequired.invalid){
+        //   alert("Is advance required is missing");
+        //   hcpValidity++;
+        // }
       }
 
       // console.log("HonarVal",this.eventInitiatio4Honararium.valid)
@@ -1034,7 +1037,7 @@ export class Class1EventRequestComponent implements OnInit {
         hcpValidity++;
       }
 
-    if (this.showRationale && this.eventInitiation4Sub.value.rationale == 0){
+    if (this.showRationale && !Boolean(this.eventInitiation4Sub.value.rationale)){
       alert("Rationale Amount is missing");
       hcpValidity++;
     }
@@ -1044,12 +1047,14 @@ export class Class1EventRequestComponent implements OnInit {
       alert("Travel Deatails are missing")
       hcpValidity++;
     }
-    if(this.eventInitiation4Sub.value.isAdvanceRequired.invalid){
-      alert("Is advance required is missing");
-      hcpValidity++;
-    }
+   
     if(this.eventInitiation4Sub.value.isLocalConveyance == "Yes" && this.eventInitiation4Sub.value.localConveyanceAmount == 0){
       alert("Local Conveyance Amount is missing");
+      hcpValidity++;
+    }
+
+    if(this.showLocalConveyance && !Boolean(this.eventInitiation4Sub.value.isLocalConveyBTC)){
+      alert("Local Conveyance BTC/BTE is missing");
       hcpValidity++;
     }
 
@@ -1072,7 +1077,7 @@ export class Class1EventRequestComponent implements OnInit {
         TrainerCode : (Boolean(this.trainerCode))? this.trainerCode+' ' : " ",
         Speciality : (Boolean(this.speakerSpeciality))? this.speakerSpeciality+'' : this.trainerSpeciality,
         Tier : (Boolean(this.speakerTier))? this.speakerTier+' ' : this.trainerTier+' ',
-        Rationale : (this.isHonararium && this.showRationale)? this.eventInitiation4Sub.value.rationale+'' : 0+'',
+        Rationale : (this.showRationale)? this.eventInitiation4Sub.value.rationale+' ' : 'None',
         PresentationDuration : honarariumDuration.presentationDuration+'' ,
         PanelSessionPreperationDuration :  honarariumDuration.panelSessionPreparation+'',
         PanelDisscussionDuration : honarariumDuration.panelDiscussionDuration+'',
@@ -1176,7 +1181,7 @@ export class Class1EventRequestComponent implements OnInit {
       this.eventInitiatio4Honararium.controls.briefingDuration.setValue(0);
       // this.eventInitiatio4Honararium.controls.isHonararium.setValue('');
       this.eventInitiatio4Honararium.controls.panelDiscussionDuration.setValue(0);
-      this.eventInitiatio4Honararium.controls.rationale.setValue(0);
+      this.eventInitiation4Sub.controls.rationale.setValue('');
       this.totalHours = 0;
 
       this.benificiaryName = '';
@@ -1184,6 +1189,8 @@ export class Class1EventRequestComponent implements OnInit {
       this.panCardNumber = '';
       this.nameAsPan = '';
       this.ifscCode = '';
+
+      this.showRationale = false;
 
 
       
@@ -1218,8 +1225,8 @@ export class Class1EventRequestComponent implements OnInit {
         // console.log(changes);
         
         this.totalHours = ((changes.presentationDuration + changes.panelDiscussionDuration + 
-                          changes.panelSessionPreparation + changes.qaSession + changes.briefingDuration)/60).toFixed(2);
-        if(this.totalHours >= 8){
+                          changes.panelSessionPreparation + changes.qaSession + changes.briefingDuration));
+        if(this.totalHours > 480){
           alert("Max of 8 hours only")
         }
         this.remuneration = (this.remunerationToCalculate * this.totalHours);
@@ -1269,8 +1276,8 @@ export class Class1EventRequestComponent implements OnInit {
       changes => {
 
         this.totalHours = ((changes.presentationDuration + changes.panelDiscussionDuration + 
-                  changes.panelSessionPreparation + changes.qaSession + changes.briefingDuration)/60).toFixed(2);
-        if(this.totalHours >= 8){
+                  changes.panelSessionPreparation + changes.qaSession + changes.briefingDuration));
+        if(this.totalHours >= 480){
         alert("Max of 8 hours only")
         }
         console.log(changes)
@@ -1599,7 +1606,7 @@ export class Class1EventRequestComponent implements OnInit {
         MisCode : (Boolean(this.filteredInviteeMisCode))? this.filteredInviteeMisCode+'' : this.inviteeSelectionForm.value.inviteeMisCode+'',
         InviteeName : this.inviteeSelectionForm.value.inviteeName,
         LocalConveyance :  this.inviteeSelectionForm.value.isInviteeLocalConveyance,
-        BtcorBte : (Boolean(this.inviteeSelectionForm.value.inviteeBTC))? this.inviteeSelectionForm.value.inviteeBTC : ' ',
+        BtcorBte : (Boolean(this.inviteeSelectionForm.value.inviteeBTC))? this.inviteeSelectionForm.value.inviteeBTC : 'NIL',
         LcAmount : (this.showInviteeLocalConveyance)?this.inviteeSelectionForm.value.inviteeLocalConveyanceAmount+'':0+'',
       }
       this.inviteeTableDetails.push(inviteeData);
@@ -1639,6 +1646,7 @@ export class Class1EventRequestComponent implements OnInit {
     
     this.expenseSelectionForm.valueChanges.subscribe(
       changes => {
+       if(Boolean(changes.expenseType)){
         if(changes.expenseType.includes('Food & Beverages') && changes.isExcludingTax == 'No'){
           if(changes.expenseAmount/this.inviteeTableDetails.length > 1500){
             this.showExpenseDeviation = true;
@@ -1650,6 +1658,7 @@ export class Class1EventRequestComponent implements OnInit {
         else{
           this.showExpenseDeviation = false;
         }
+       }
         
       }
     )
@@ -1776,7 +1785,7 @@ export class Class1EventRequestComponent implements OnInit {
         PercentAllocation : " ",
         ProjectId: " ",
         HcpRole : " ",
-        IsAdvanceRequired: this.eventInitiation4Sub.value.isAdvanceRequired,
+        IsAdvanceRequired: "Yes",
         EventOpen30days: (this.show30DaysUploaDeviation)?'Yes':'No',
         EventWithin7days : (this.show7DaysUploadDeviation)?'Yes':'No',
         RBMorBM : "joseph.s@vsaasglobal.com",

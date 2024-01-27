@@ -70,11 +70,6 @@ export class Class1PostEventSettlementComponent implements OnInit   {
 
     ngOnInit(): void {
 
-      // this.utilityService.getPrevEvents().subscribe(res => {
-      //   this.allEventList = res;
-      //   this.after30Days(this.allEventList);
-      // });
-
       this.utilityService.getInviteesFast().subscribe(res => {
         this.invitees = res
       });
@@ -96,7 +91,25 @@ export class Class1PostEventSettlementComponent implements OnInit   {
           this.utilityService.getPrevEvents().subscribe(res => {
             this.allEventList = res;
             this.after30DaysList.push(res.find(eve => eve['EventId/EventRequestId'] == params.eventId));
+            this.utilityService.getInviteesFast().subscribe(res => {
+              this.invitees = res
+            });
+      
+            this.utilityService.getExpenseType().subscribe(
+              res => this.expenseType = res
+            );
+      
+            this.utilityService.getPostEventExpense().subscribe(
+              res => {
+                // console.log(res);
+                this.expense = res;
+      
+              }
+            )
+            
             this.onEventSelect(params.eventId)
+
+
           })
         }
         else{
@@ -190,8 +203,10 @@ export class Class1PostEventSettlementComponent implements OnInit   {
   
 
     selectedEventDetails : any;
+    selectedEventId : any;
 
     onEventSelect(eventId:any){
+      this.selectedEventId = eventId;
       // console.log(eventId)
       this.inviteeTableDetails = [];
       this.expenseTabelDetails = [];
@@ -202,32 +217,37 @@ export class Class1PostEventSettlementComponent implements OnInit   {
         return eve['EventId/EventRequestId'] == eventId
       })
 
-      this.invitees.forEach(invitee => {
-        if(invitee['EventId/EventRequestId'] == eventId){
-          /*
-          {
-      "eventIdOrEventRequestId": "string",
-      "inviteeName": "string",
-      "misCode": "string",
-      "localConveyance": "string",
-      "btcorBte": "string",
-      "lcAmount": "string"
-    }
-           */
-          console.log(invitee)
-          const data = {
-            EventIdOrEventRequestId : invitee['EventId/EventRequestId'],
-            InviteeName : invitee.InviteeName,
-            MisCode : invitee.MISCode,
-            LocalConveyance : invitee.LocalConveyance,
-            BtcorBte : invitee['BTC/BTE'],
-            LcAmount : invitee.LcAmount
-          };
-          this.inviteeTableDetails.push(data);
-          // this.inviteeTableDetailsCopy.push(invitee);
-        }
-      })
+      if(Boolean(this.invitees))
+      {
+        this.invitees.forEach(invitee => {
+          if(invitee['EventId/EventRequestId'] == eventId){
+            /*
+            {
+        "eventIdOrEventRequestId": "string",
+        "inviteeName": "string",
+        "misCode": "string",
+        "localConveyance": "string",
+        "btcorBte": "string",
+        "lcAmount": "string"
+      }
+             */
+            console.log(invitee)
+            const data = {
+              EventIdOrEventRequestId : invitee['EventId/EventRequestId'],
+              InviteeName : invitee.InviteeName,
+              MisCode : invitee.MISCode,
+              LocalConveyance : invitee.LocalConveyance,
+              BtcorBte : invitee['BTC/BTE'],
+              LcAmount : invitee.LcAmount
+            };
+            this.inviteeTableDetails.push(data);
+            // this.inviteeTableDetailsCopy.push(invitee);
+          }
+        })
+      }
 
+     if(Boolean(this.expense))
+     {
       this.expense.forEach(exp => {
         // console.log(exp['EventId/EventRequestId'])
         /**
@@ -263,6 +283,7 @@ export class Class1PostEventSettlementComponent implements OnInit   {
        
        
       })
+     }
 
       for(let i=0;i<this.expenseTabelDetails.length;i++){
         this.expenseTableActualAmountInput.push(i)

@@ -382,7 +382,7 @@
               <div class="col">
                 <mat-form-field *ngIf="showRationale" color="accent" appearance="outline">
                   <mat-label>Rationale</mat-label>
-                  <input matInput type="number" placeholder="Enter Currency" formControlName="rationale">
+                  <input matInput type="text" placeholder="Enter Currency" formControlName="rationale">
                 </mat-form-field>
               </div>
               
@@ -414,20 +414,7 @@
 
                 </div>
               </div>
-              <div class="row">
-                <div class="col">
-                  <div>
-                    <mat-label>Is Advance Required?</mat-label>
-                    <mat-radio-group formControlName="isAdvanceRequired">
-                        <div class="mt-2">
-                            <mat-radio-button value="Yes" >Yes</mat-radio-button>
-                            <mat-radio-button value="No" class="m-1" >No</mat-radio-button>
-                        </div>
-                    </mat-radio-group>
-                  </div>
-                </div>
-  
-              </div>
+
               <div class="row">
                 
                 <div class="col">
@@ -682,12 +669,27 @@
                   </mat-radio-group>
             </div>
 
+           <div class="row">
             <div class="col">
               <mat-form-field  *ngIf="showLocalConveyance" color="accent" appearance="outline">
                 <mat-label>Local Conveyance Amount</mat-label>
                 <input matInput placeholder="Enter Local Conveyance Amount" formControlName="localConveyanceAmount">
               </mat-form-field>
+
             </div>
+
+            <div class="col">
+              <div>
+                <mat-radio-group  *ngIf="showLocalConveyance" formControlName="isLocalConveyBTC">
+                  <mat-label>Is BTC/BTE?</mat-label><br>
+                   <div class="mt-2">
+                    <mat-radio-button value="BTC" >BTC</mat-radio-button>
+                    <mat-radio-button value="BTE" class="m-1" >BTE</mat-radio-button>
+                   </div>
+                </mat-radio-group>
+              </div>
+            </div>
+           </div>
         </form>
 
           <div class="col-12 d-flex justify-content-start">
@@ -976,10 +978,17 @@
               <!-- <mat-hint>(If expense selected as Food and Beverages)</mat-hint> -->
             </mat-form-field>
 
-            <div class="m-2" *ngIf="showExpenseDeviation">
-              <mat-label>Upload Deviation</mat-label><br>
-              <input type="file" formControlName="uploadExpenseDeviation">
+            <div>
+              <mat-label>Is Advance Required?</mat-label>
+              <mat-radio-group formControlName="isAdvanceRequired">
+                  <div class="mt-2">
+                      <mat-radio-button value="Yes" >Yes</mat-radio-button>
+                      <mat-radio-button value="No" class="m-1" >No</mat-radio-button>
+                  </div>
+              </mat-radio-group>
             </div>
+
+           
           </div>
           <div class="col">
             <mat-label>Amount is excluding Tax</mat-label>
@@ -997,29 +1006,15 @@
                 <mat-radio-button value="BTE" class="m-2">BTE</mat-radio-button>
               </div>
             </mat-radio-group>
+
+            <div class="m-2" *ngIf="showExpenseDeviation">
+              <mat-label>Upload Deviation</mat-label><br>
+              <input type="file" formControlName="uploadExpenseDeviation">
+            </div>
+            
           </div>
         </div>
-        <div class="row">
-          <div class="col">
-            <mat-form-field color="accent" appearance="outline">
-              <mat-label>BTC Total Amount</mat-label>
-              <input matInput placeholder="BTC Amount" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="BTCTotalAmount">
-            </mat-form-field>
-          </div>
-          <div class="col">
-            <mat-form-field color="accent" appearance="outline">
-              <mat-label>BTE Total Amount</mat-label>
-              <input matInput placeholder="BTE Total Amount" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="BTETotalAmount">
-            </mat-form-field>
-          </div>
-          <div class="col">
-            <mat-form-field color="accent" appearance="outline">
-              <mat-label>Budget Amount</mat-label>
-              <input matInput placeholder="BTE Total Amount" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="BudgetAmount"> 
-            </mat-form-field>
-          </div>
-      
-        </div>
+       
 
       </form>
       <div class="col-12 d-flex justify-content-center">
@@ -1055,6 +1050,28 @@
     
         </table>
       </div> 
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>BTC Total Amount</mat-label>
+            <input matInput placeholder="BTC Amount" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="BTCTotalAmount">
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>BTE Total Amount</mat-label>
+            <input matInput placeholder="BTE Total Amount" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="BTETotalAmount">
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>Budget Amount</mat-label>
+            <input matInput placeholder="BTE Total Amount" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="BudgetAmount"> 
+          </mat-form-field>
+        </div>
+    
+      </div>
 
       <!-- <div class="col-12 d-flex justify-content-center">
         <button class="btn btn-success btn-sm">Save</button>
